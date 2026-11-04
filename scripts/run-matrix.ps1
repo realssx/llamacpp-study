@@ -6,8 +6,8 @@
 #       .\run-matrix.ps1 -CoolTo 70      # 换个等温目标
 
 param(
-    [int]$CoolTo = 72,
-    [int]$MaxWaitMin = 10,
+    [int]$CoolTo = 75,
+    [int]$MaxWaitMin = 5,
     [int]$Rep = 3
 )
 
