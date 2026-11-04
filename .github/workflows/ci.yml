@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+
+jobs:
+  lint-and-validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 静态检查 PowerShell 脚本
+        shell: pwsh
+        run: |
+          Install-Module PSScriptAnalyzer -Force -Scope CurrentUser -SkipPublisherCheck
+          $issues = Invoke-ScriptAnalyzer -Path scripts -Recurse -Severity Error
+          if ($issues) { $issues | Format-Table -AutoSize | Out-String | Write-Host; exit 1 }
+          Write-Host "脚本检查通过"
+
+      - name: 校验 benchmark 数据完整性
+        shell: pwsh
+        run: |
+          $files = @("results/benchmark.csv", "results/ngl-sweep.csv")
+          foreach ($f in $files) {
+            if (-not (Test-Path $f)) { Write-Error "缺少 $f"; exit 1 }
+            $rows = Import-Csv $f
+            Write-Host "$f : $($rows.Count) 行"
+            $empty = $rows | Where-Object { -not $_.PSObject.Properties['notes'] }
+            if ($rows.Count -eq 0) { Write-Error "$f 没有数据"; exit 1 }
+          }
+
+      - name: 检查 README 必备章节
+        shell: pwsh
+        run: |
+          $readme = Get-Content README.md -Raw
+          $required = @("项目背景", "实验环境", "阶段计划", "数据记录约定")
+          $missing = $required | Where-Object { $readme -notmatch [regex]::Escape($_) }
+          if ($missing) { Write-Error ("README 缺少章节: " + ($missing -join ", ")); exit 1 }
+          Write-Host "README 结构完整"

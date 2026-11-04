@@ -1,0 +1,26 @@
+# 原始输出日志（每次运行几百行，体积大，不入库）
+results/raw/
+
+# 模型文件
+*.gguf
+*.bin
+
+# 构建产物
+build/
+build-*/
+*.exe
+*.dll
+*.lib
+*.obj
+*.o
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
+*~
+
+# 系统
+Thumbs.db
+desktop.ini
+.DS_Store
