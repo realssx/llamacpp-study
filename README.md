@@ -1,4 +1,4 @@
-﻿# llama.cpp 推理性能研究
+# llama.cpp 推理性能研究
 
 [![CI](https://github.com/realssx/llamacpp-study/actions/workflows/ci.yml/badge.svg)](https://github.com/realssx/llamacpp-study/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -71,6 +71,8 @@ llamacpp-study/
 | Q8_0 | CUDA | 10608.7 | 128.2 | 6.0× |
 | Q8_0 | CPU (16 线程) | 2072.6 | 21.4 | 1× |
 
+![CUDA 基准测试](docs/images/bench-cuda.png)
+
 初步结论：
 
 1. **GPU 生成速度约为 CPU 的 5–6 倍**，prompt 处理差距更大（3–5 倍）。
@@ -79,8 +81,27 @@ llamacpp-study/
    生成受内存带宽限制，prompt 处理受算力限制。
 3. CPU 端量化同样呈现 "低比特更快" 的趋势。
 
+### 运行示例
+
+![模型对话](docs/images/cli-demo.png)
+
 待复查：早期用 MinGW 编译的 CPU 版 tg128 只有 10.4 t/s，MSVC 版是 35.3 t/s，
 差 3.4 倍；需要确认是编译器代码生成差异，还是当时机器的功耗/负载状态影响。
+
+### 测量可复现性问题
+
+同一配置（Q4_K_M / ngl=99）三次测量，`tg128` 分别是 **185.7 / 133.6 / 145.1 t/s**，
+极差 39%。笔记本 GPU 的功耗墙与温度墙是主要嫌疑，详见
+[进度报告 §6.1](docs/03-进度报告.md)。后续测量将记录 GPU 频率与温度，并静置降温后重测。
+
+![GPU 状态](docs/images/gpu-status.png)
+
+上图：空闲时 4 W / 210 MHz，推理时升到 45 W / 1740 MHz / 73 °C / 97% 利用率，
+且 SM 频率在 1545–1815 MHz 之间波动——这正是吞吐量不稳定的直接原因。
+
+### GPU 层卸载曲线
+
+![层卸载曲线](docs/ngl-sweep.svg)
 
 ## 五、数据记录约定
 
