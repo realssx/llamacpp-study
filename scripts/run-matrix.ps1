@@ -67,7 +67,7 @@ foreach ($q in $quants) {
         if ($text -match "\|\s*pp512\s*\|\s*([\d.]+)") { $ppTs = $Matches[1] }
         if ($text -match "\|\s*tg128\s*\|\s*([\d.]+)") { $tgTs = $Matches[1] }
 
-        $note = if ($cfg.b -eq "CPU") { "16 threads, start ${startTemp}C" } else { "RTX 4060 8GB, start ${startTemp}C" }
+        $note = if ($cfg.b -eq "CPU") { "16 threads start=${startTemp}C" } else { "RTX 4060 8GB start=${startTemp}C" }
         "{0},{1},{2},{3},512,128,{4},{5},{6}" -f `
             (Get-Date -Format "yyyy-MM-dd HH:mm"), "qwen2.5-1.5b-$q", $cfg.b, $cfg.ngl, $ppTs, $tgTs, $note |
             Out-File -FilePath $Csv -Encoding UTF8 -Append
