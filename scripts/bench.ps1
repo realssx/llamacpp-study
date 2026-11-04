@@ -1,4 +1,4 @@
-# 一键跑 llama-bench 并记录结果
+﻿# 一键跑 llama-bench 并记录结果
 #
 # 用法示例：
 #   .\bench.ps1 -Model "D:\tools\models\qwen2.5-1.5b-instruct-q4_k_m.gguf" -Backend cuda -Ngl 99

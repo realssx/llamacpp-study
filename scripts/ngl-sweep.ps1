@@ -1,4 +1,4 @@
-# -ngl 阶梯实验（稳健版：用 cmd 重定向到文件，再解析）
+﻿# -ngl 阶梯实验（稳健版：用 cmd 重定向到文件，再解析）
 $cuda = "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.4\bin"
 $exe  = "D:\tools\llama.cpp-src\build-cuda\bin\llama-bench.exe"
 $m    = "D:\tools\models\qwen2.5-1.5b-instruct-q4_k_m.gguf"
